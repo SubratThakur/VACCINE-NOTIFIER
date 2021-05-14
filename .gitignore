@@ -3,4 +3,3 @@ api/package-lock.json
 api/node_modules
 client/package-lock.json
 client/node_modules
-client/build
