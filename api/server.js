@@ -1,4 +1,4 @@
-import findSlot from './slot';
+const findSlot = require('./slot');
 const express = require('express');
 const schedule = require('node-schedule');
 const path = require('path');
