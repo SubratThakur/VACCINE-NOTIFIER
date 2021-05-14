@@ -100,13 +100,18 @@ const dataFetch = async (districtId,age) => {
   console.log(districtId+ ' :' +reqDate);
   const url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${reqDate}`
   console.log(url);
-  const response = await fetch(url, {
-          method: 'GET',
-          headers: {'Content-Type': 'application/json','User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-      })
-  const resp = await response.json(); 
-  console.log('Center Responce: '+resp);  
-  return resp;
+  try{
+    const response = await fetch(url, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json','User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+        })
+      
+    const resp = await response.json();
+    console.log('Center Responce: '+resp);  
+    return resp;
+  } catch(e){
+    console.log(e);
+  }
 }
   
 async function findSlot() {
