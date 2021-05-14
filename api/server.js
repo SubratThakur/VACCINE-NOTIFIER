@@ -114,30 +114,31 @@ async function findSlot() {
   userData = userMap;
   console.log(`User map : ${JSON.stringify(userData)}`);
   for (const key of Object.entries(userData)) {
-      var input=key[0].split("_");
-      var districtId= input[0];
-      var age= input[1];
-      var data = await dataFetch(districtId,age);
-      for (var i=0;i < data.centers.length;i++){
-          var subdata = data.centers[i];
-              for (var j=0;j < subdata.sessions.length;j++) {
-                  var sessiondata = subdata.sessions[j];
-                  if(sessiondata.min_age_limit == age && sessiondata.available_capacity >0) {
-                      console.log('Slots available for following locations:' , subdata.name , subdata.state_name , subdata.district_name , subdata.pincode , sessiondata.date);
-                      notify(key,subdata.district_name,sessiondata.min_age_limit,sessiondata.date);
-                  }
-              }
+    let notifyUser = false;
+    var input=key[0].split("_");
+    var result = key[1];
+    var districtId= input[0];
+    var age= input[1];
+    var mailbody = `Hey ! Vaccination slot is now available for age group ${age} at ${result[0].district.label} (${result[0].state.label}) at below centers and dates : \n`
+    var data = await dataFetch(districtId,age);
+    for (var i=0;i < data.centers.length;i++){
+      var subdata = data.centers[i];
+      for (var j=0;j < subdata.sessions.length;j++) {
+        var sessiondata = subdata.sessions[j];
+        if(sessiondata.min_age_limit == age && sessiondata.available_capacity >0) {
+            console.log('Slots available for following locations:' , subdata.name , subdata.state_name , subdata.district_name , subdata.pincode , sessiondata.date);
+            mailbody = `${mailbody} \n ${subdata.name} on ${sessiondata.date} : available count =  ${sessiondata.available_capacity}\n`
+            notifyUser = true;
+        }
       }
+    }
+    if(notifyUser){
+      result.forEach((user)=>{
+        console.log(user.email);
+        sendMail(user.email, mailbody)
+      })
+    }
   }
-}
-
-function notify(key,districtName,age,date) {
-  var result = userData[key[0]];
-  console.log(`User notify : ${result}`);
-  result.forEach((user)=>{
-      console.log(user.email);
-      sendMail(user.email, {districtName,age,date})
-  })
 }
 
 const transporter = nodemailer.createTransport({
@@ -156,9 +157,9 @@ const mailOptions = {
 };
 
 
-function sendMail(toAddress, metadata){
+function sendMail(toAddress, mailbody){
     mailOptions.to = toAddress;
-    mailOptions.text = `Hey ! Vaccination slot is now available for age group ${metadata.age} at district ${metadata.districtName} on date ${metadata.date}`;
+    mailOptions.text = mailbody;
     transporter.sendMail(mailOptions, function(error, info){
     if (error) {
         console.log(error);
