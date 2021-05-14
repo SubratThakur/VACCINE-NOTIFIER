@@ -1,7 +1,8 @@
-const findSlot = require('./slot');
 const express = require('express');
 const schedule = require('node-schedule');
+const nodemailer = require('nodemailer');
 const path = require('path');
+const fetch = require('node-fetch');
 const _ = require('lodash');
 const app = express(),
       bodyParser = require("body-parser");
@@ -34,6 +35,14 @@ app.get('/api/users/map', (req, res) => {
   res.json(userMap);
 });
 
+app.post('/api/users', (req, res) => {
+  users = JSON.parse(req.body);
+});
+
+app.post('/api/users/map', (req, res) => {
+  userMap = JSON.parse(req.body);
+});
+
 app.post('/api/user', (req, res) => {
   const user = req.body.user;
   console.log('Adding user:::::', user);
@@ -49,7 +58,7 @@ app.post('/api/user', (req, res) => {
   });
   res.json("user addedd");
 });
-
+var userData = {};
 app.delete('/api/user', (req, res) => {
   const user = req.body.user;
   let filteredUser = users;
@@ -82,3 +91,76 @@ app.get('/', (req,res) => {
 app.listen(port, () => {
     console.log(`Server listening on the port::${port}`);
 });
+
+const dataFetch = async (districtId,age) => {
+  const today = new Date();
+  const dd = today.getDate();
+  const mm = today.getMonth()+1; 
+  const yyyy = today.getFullYear();
+  const reqDate = `${dd}-${mm}-${yyyy}`
+  console.log(reqDate);
+  const response = await fetch(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${reqDate}`, {
+          method: 'GET',
+          headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+      })
+  const resp = await response.json();   
+  return resp;
+}
+  
+function findSlot(userMap) {
+  userData = userMap;
+  userData.forEach(function(value, key) {
+      console.log(key)
+      var input=key.split("-");
+      var districtId= input[0];
+      var age= input[1];
+      var data = dataFetch(districtId,age);
+      data.then((data)=>{
+      for (var i=0;i < data.centers.length;i++){
+          var subdata = data.centers[i];
+              for (var j=0;j < subdata.sessions.length;j++) {
+                  var sessiondata = subdata.sessions[j];
+                  if(sessiondata.min_age_limit == age && sessiondata.available_capacity >0) {
+                      console.log('Slots available for following locations:' , subdata.name , subdata.state_name , subdata.district_name , subdata.pincode , sessiondata.date);
+                      notify(key,subdata.district_name,sessiondata.min_age_limit,sessiondata.date);
+                  }
+              }
+      }})
+  })
+}
+
+function notify(key,districtName,age,date) {
+  var result = userData.get(key);
+  result.forEach((user)=>{
+      console.log(user.email);
+      sendMail(user.email, {districtName,age,date})
+  })
+}
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'turvoshipment@gmail.com',
+    pass: 'turvoshiper@007'
+  }
+});
+
+const mailOptions = {
+  from: 'turvoshipment@gmail.com',
+  to: '',
+  subject: 'New Slot for vaccination available in your area! Hurry up!',
+  text: ''
+};
+
+
+function sendMail(toAddress, metadata){
+    mailOptions.to = toAddress;
+    mailOptions.text = `Hey ! Vaccination slot is now available for age group ${metadata.age} at district ${metadata.districtName} on date ${metadata.date}`;
+    transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+        console.log(error);
+    } else {
+        console.log('Email sent: ' + info.response);
+    }
+    });
+};
