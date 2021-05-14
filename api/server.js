@@ -3,7 +3,6 @@ const schedule = require('node-schedule');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const fetch = require('node-fetch');
-const _ = require('lodash');
 const app = express(),
       bodyParser = require("body-parser");
       port = process.env.PORT?parseInt(process.env.PORT, 10):80;
