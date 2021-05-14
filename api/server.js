@@ -159,7 +159,7 @@ const mailOptions = {
 
 function sendMail(toAddress, mailbody){
     mailOptions.to = toAddress;
-    mailOptions.text = mailbody;
+    mailOptions.text = `${mailbody} \n\n\n <b>Please unsubscribe to stop receiving further e-mails!</b>`;
     transporter.sendMail(mailOptions, function(error, info){
     if (error) {
         console.log(error);
