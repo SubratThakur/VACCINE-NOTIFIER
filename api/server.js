@@ -9,6 +9,8 @@ const __dirname = path.resolve();
 let users = [
 ];
 
+let userMap = {};
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/build')));
 
@@ -17,10 +19,24 @@ app.get('/api/users', (req, res) => {
   res.json(users);
 });
 
+app.get('/api/users/map', (req, res) => {
+  console.log('api/users/map called!')
+  res.json(userMap);
+});
+
 app.post('/api/user', (req, res) => {
   const user = req.body.user;
   console.log('Adding user:::::', user);
   users.push(user);
+  const districtId = user.district.value;
+  user.filter.age.forEach((age)=>{
+    var key = `${districtId}_${age}`;
+    if(key in userMap){
+      userMap[key].push(user);
+    } else {
+      userMap[key]= [user];
+    }
+  });
   res.json("user addedd");
 });
 
