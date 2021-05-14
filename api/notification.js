@@ -16,9 +16,9 @@ var mailOptions = {
 };
 
 
-export default function sendMail(toAddress, body){
+export default function sendMail(toAddress, metadata){
     mailOptions.to = toAddress;
-    mailOptions.text = body;
+    mailOptions.text = `Hey ! Vaccination slot is now available for age group ${metadata.age} at district ${metadata.districtName} on date ${metadata.date}`;
     transporter.sendMail(mailOptions, function(error, info){
     if (error) {
         console.log(error);

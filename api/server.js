@@ -1,3 +1,4 @@
+import findSlot from './slot';
 const express = require('express');
 const schedule = require('node-schedule');
 const path = require('path');
@@ -7,14 +8,16 @@ const app = express(),
       port = process.env.PORT?parseInt(process.env.PORT, 10):80;
 const __dirname = path.resolve();
 
-schedule.scheduleJob('*/1 * * * *', function(){
-  console.log('This job was actually ran at ' + new Date());
-});
 // place holder for the data
 let users = [
 ];
 
 let userMap = {};
+
+schedule.scheduleJob('*/1 * * * *', function(){
+  console.log('Job to check slot at ' + new Date());
+  findSlot(userMap);
+});
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../client/build')));
