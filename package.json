@@ -1,0 +1,12 @@
+{
+  "name": "vaccine-notifier",
+  "version": "1.0.0",
+  "description": "Parent folder for api and client",
+  "main": "index.js",
+  "scripts": {
+    "install": "cd client && npm install && cd ../api && npm install",
+    "start": "cd client && npm run build && cd ../api && npm run build && npm run start"
+  },
+  "author": "subrat.me@gmail.com",
+  "license": "ISC"
+}

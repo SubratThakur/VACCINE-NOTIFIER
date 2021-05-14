@@ -1,0 +1,113 @@
+
+.header {
+  width: 100%;
+  padding: 10%;
+  background-color: burlywood;
+  color: white;
+  text-align: center;
+}
+
+.display-board {
+  width: 100%;
+  background-color: rgb(555, 200, 789);
+  padding: 5%;
+}
+
+.number {
+  color:#6acc7b;
+  font-size: 75px;
+  text-align: center;
+}
+
+.mrgnbtm {
+  flex:none;
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+.selected-filter {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: cornflowerblue;
+  border: 1px solid black;
+}
+
+.unselected-filter {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border: 1px solid black;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+
+/* Style the tab content */
+.childContainer {
+  padding: 10px;
+  border: 1px solid rgb(214, 213, 213);
+  border-top: none;
+}
+
+.filter {
+  padding: 7px;
+}
+
+.filter-span {
+  padding-left: 10%;
+}
+
+.MuiButtonBase-root{
+  margin: 0px 10px !important;
+  width: 100px !important;
+  border: 1px solid gray !important;
+  border-radius: 4px !important;
+  color: black !important;
+}
+
+.Mui-selected {
+  background-color: cornflowerblue !important;
+}
+.hidden {
+  display: none;
+}
+
+.invalid {
+  border: 1px solid #D8000C;
+}
+
+.info {
+  margin-bottom: 15px;
+  padding: 4px 12px;
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196F3;
+}
+
+.error{
+  color: #D8000C;
+  background-color: #FFBABA;
+  background-image: url('https://i.imgur.com/GnyDvKN.png');
+  border: 1px solid;
+  border-radius: 4px;
+  margin: 5px 0px;
+  padding: 15px 10px 15px 50px;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+}
