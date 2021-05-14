@@ -1,10 +1,15 @@
 const express = require('express');
+const schedule = require('node-schedule');
 const path = require('path');
 const _ = require('lodash');
 const app = express(),
       bodyParser = require("body-parser");
       port = process.env.PORT?parseInt(process.env.PORT, 10):80;
 const __dirname = path.resolve();
+
+schedule.scheduleJob('*/1 * * * *', function(){
+  console.log('This job was actually ran at ' + new Date());
+});
 // place holder for the data
 let users = [
 ];

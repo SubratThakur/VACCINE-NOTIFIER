@@ -9,5 +9,6 @@
     "start": "cd api && npm install && npm run start"
   },
   "author": "subrat.me@gmail.com",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {}
 }
