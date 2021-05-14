@@ -22,6 +22,7 @@
     "express": "^4.17.1",
     "http-proxy-middleware": "^1.0.4",
     "nodemailer": "6.6.0",
+    "node-schedule": "^2.0.0",
     "node-fetch": "2.6.1"
   },
   "devDependencies": {
@@ -33,7 +34,6 @@
     "nodemon": "^2.0.4",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-stream": "^5.2.1",
-    "node-schedule": "^2.0.0"
+    "webpack-stream": "^5.2.1"
   }
 }
