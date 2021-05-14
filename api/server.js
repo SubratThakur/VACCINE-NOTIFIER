@@ -7,7 +7,7 @@ const _ = require('lodash');
 const app = express(),
       bodyParser = require("body-parser");
       port = process.env.PORT?parseInt(process.env.PORT, 10):80;
-const __dirname = path.resolve();
+//const __dirname = path.resolve();
 
 // place holder for the data
 let users = [
@@ -15,10 +15,10 @@ let users = [
 
 let userMap = {};
 
-schedule.scheduleJob('*/1 * * * *', function(){
+schedule.scheduleJob('*/1 * * * *', async function(){
   console.log('Job to check slot at ' + new Date());
   if(users.length>0){
-    findSlot(userMap);
+    await findSlot();
   }
 });
 
@@ -98,24 +98,26 @@ const dataFetch = async (districtId,age) => {
   const mm = today.getMonth()+1; 
   const yyyy = today.getFullYear();
   const reqDate = `${dd}-${mm}-${yyyy}`
-  console.log(reqDate);
-  const response = await fetch(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${reqDate}`, {
+  console.log(districtId+ ' :' +reqDate);
+  const url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${reqDate}`
+  console.log(url);
+  const response = await fetch(url, {
           method: 'GET',
-          headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+          headers: {'Content-Type': 'application/json','User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
       })
-  const resp = await response.json();   
+  const resp = await response.json(); 
+  console.log('Center Responce: '+resp);  
   return resp;
 }
   
-function findSlot(userMap) {
+async function findSlot() {
   userData = userMap;
-  userData.forEach(function(value, key) {
-      console.log(key)
-      var input=key.split("-");
+  console.log(`User map : ${JSON.stringify(userData)}`);
+  for (const key of Object.entries(userData)) {
+      var input=key[0].split("_");
       var districtId= input[0];
       var age= input[1];
-      var data = dataFetch(districtId,age);
-      data.then((data)=>{
+      var data = await dataFetch(districtId,age);
       for (var i=0;i < data.centers.length;i++){
           var subdata = data.centers[i];
               for (var j=0;j < subdata.sessions.length;j++) {
@@ -125,12 +127,13 @@ function findSlot(userMap) {
                       notify(key,subdata.district_name,sessiondata.min_age_limit,sessiondata.date);
                   }
               }
-      }})
-  })
+      }
+  }
 }
 
 function notify(key,districtName,age,date) {
-  var result = userData.get(key);
+  var result = userData[key[0]];
+  console.log(`User notify : ${result}`);
   result.forEach((user)=>{
       console.log(user.email);
       sendMail(user.email, {districtName,age,date})
