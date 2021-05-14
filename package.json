@@ -4,7 +4,7 @@
   "description": "Parent folder for api and client",
   "main": "index.js",
   "scripts": {
-    "install": "cd client && npm install && cd ../api && npm install && npm run build",
+    "install": "cd client && npm install && cd ../api && npm install",
     "build-pck": "cd client && npm run build && cd ../api && npm run build",
     "start": "cd api && npm install && npm run start"
   },
