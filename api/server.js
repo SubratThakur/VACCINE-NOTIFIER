@@ -3,7 +3,7 @@ const path = require('path');
 const _ = require('lodash');
 const app = express(),
       bodyParser = require("body-parser");
-      port = 80;
+      port = process.env.PORT?parseInt(process.env.PORT, 10):80;
 const __dirname = path.resolve();
 // place holder for the data
 let users = [
