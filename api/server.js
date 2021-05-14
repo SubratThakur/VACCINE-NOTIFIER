@@ -16,7 +16,9 @@ let userMap = {};
 
 schedule.scheduleJob('*/1 * * * *', function(){
   console.log('Job to check slot at ' + new Date());
-  findSlot(userMap);
+  if(users.length>0){
+    findSlot(userMap);
+  }
 });
 
 app.use(bodyParser.json());

@@ -1,14 +1,14 @@
-import sendMail from './notification';
+const sendMail = require('./notification');
 const fetch = require("node-fetch");
 var userData = {};
 
 const dataFetch = async (districtId,age) => {
-const today = new Date();
-const dd = today.getDate();
-const mm = today.getMonth()+1; 
-const yyyy = today.getFullYear();
-const reqDate = `${dd}-${mm}-${yyyy}`
-console.log(reqDate);
+    const today = new Date();
+    const dd = today.getDate();
+    const mm = today.getMonth()+1; 
+    const yyyy = today.getFullYear();
+    const reqDate = `${dd}-${mm}-${yyyy}`
+    console.log(reqDate);
     const response = await fetch(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${reqDate}`, {
             method: 'GET',
             headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
